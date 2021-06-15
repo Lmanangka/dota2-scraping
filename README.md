@@ -1,8 +1,8 @@
 # Web Scraping
 
-Collect data from [Dotabuff](https://www.dotabuff.com)
+Collecting data from [Dotabuff](https://www.dotabuff.com)
 such as Highest Winrate (monthly and weekly) 
-Hero stat like lane presence, item mostly used, worst versus and best versus
+Hero stat like lane presence, items mostly used, worst versus and best versus
 
 ## Need to Install
 * pandas
