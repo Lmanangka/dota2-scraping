@@ -19,6 +19,6 @@ pip install beautifulsoup4
 ```
 ## How to Use
 Usage: python3 dotaStat.py (OPTION)
-* month
-* week
-* hero
+* month -----> winrate this month
+* week ------> winrate this week
+* hero ------> lane presence, items mostly used, worst versus and best versus
