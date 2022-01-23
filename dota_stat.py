@@ -121,9 +121,24 @@ class GameImpact:
         print(title_weekly.center(50))
         print(month_table.head(10),'\n')
 
+def help_text():
+    '''display help text'''
+    print('''Usage: dota_stat.py [OPTION]\n
+-wm\t\tHighest Win Rate This Month
+-ww\t\tHighest Win Rate This Week
+-H | --hero\tChoose Heroes And Display Laning Presence, Most Item Used, Versus And Worst Versus
+-iw\t\tMost Game Impact This Week
+-im\t\tMost Game Impact This Month
+-h | --help\tShow This Text\n''')
+
 if __name__=='__main__':
     winrate=Winrate()
     try:
+
+        if len(sys.argv)<2:
+            help_text()
+            sys.exit()
+
         arg=sys.argv[1]
 
         if arg == "-wm":
@@ -139,22 +154,11 @@ if __name__=='__main__':
         elif arg == "-im":
             gameimpact=GameImpact()
             gameimpact.game_impact_month()
-        elif arg in {"-h","--help"," "}:
-            print('''Usage: dota_stat.py [OPTION]\n
--wm\t\tHighest Win Rate This Month
--ww\t\tHighest Win Rate This Week
--H | --hero\tChoose Heroes And Display Laning Presence, Most Item Used, Versus And Worst Versus
--iw\t\tMost Game Impact This Week
--im\t\tMost Game Impact This Month\n
--h | --help\tShow This Text''')
+        elif arg in {"-h","--help"}:
+            help_text()
         else:
-            print('''Usage: dota_stat.py [OPTION]\n
--wm\t\tHighest Win Rate This Month
--ww\t\tHighest Win Rate This Week
--H | --hero\tChoose Heroes And Display Laning Presence, Most Item Used, Versus And Worst Versus
--iw\t\tMost Game Impact This Week
--im\t\tMost Game Impact This Month\n
--h | --help\tShow This Text''')
+            help_text()
+
     except KeyboardInterrupt:
         print("exit")
     finally:
