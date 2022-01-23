@@ -19,11 +19,9 @@ pip install beautifulsoup4
 ```
 ## How to Use
 Usage: dota_stat.py [OPTION]
-
--wm             Highest Win Rate This Month
--ww             Highest Win Rate This Week
--H | --hero     Choose Heroes And Display Laning Presence, Most Item Used,
-                Versus And Worst Versus
--iw             Most Game Impact This Week
--im             Most Game Impact This Month\n
--h | --help     Show This Text
+-wm ------------> Highest Win Rate This Month
+-ww ------------> Highest Win Rate This Week
+-H | --hero ----> Choose Heroes And Display Laning Presence, Most Item Used, Versus And Worst Versus
+-iw ------------> Most Game Impact This Week
+-im ------------> Most Game Impact This Month\n
+-h | --help ----> Show This Text
