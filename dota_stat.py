@@ -1,7 +1,7 @@
-#!/usr/bin/python3.8
+#!/usr/bin/python3
 '''
 Created : 21/06/2021
-Revision: 23/01/2022
+Revision: 28/03/2022
 Author  : Leo Manangka
 '''
 import sys
@@ -9,8 +9,34 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+class color:
+    BOLD = '\033[1m'
+    GREEN = '\033[92m'
+    CYAN = '\033[96m'
+    RED = '\033[91m'
+    END = '\033[0m'
+
+def stat_code(url):
+    '''check status code'''
+
+    if url.status_code==200:
+        print(color.GREEN + 'Success!\n' + color.END)
+    else:
+        print(color.RED + 'An error has occured:' + color.END,url)
+
+def help_text():
+    '''display help text'''
+
+    print(color.CYAN + '''Usage: dota_stat.py [OPTION]\n
+-wm\t\tHighest Win Rate This Month
+-ww\t\tHighest Win Rate This Week
+-H | --hero\tChoose Heroes And Display Laning Presence, Most Item Used, Versus And Worst Versus
+-iw\t\tMost Game Impact This Week
+-im\t\tMost Game Impact This Month
+-h | --help\tShow This Text\n''' + color.END)
+
 class Winrate:
-    '''winrate class'''
+    '''winrate class scraping dotabuff winning rate weekly and monthly'''
 
     def __init__(self):
         self.winning_month='https://www.dotabuff.com/heroes/winning'
@@ -24,34 +50,28 @@ class Winrate:
     def month(self):
         """monthly winrate"""
 
-        if self.resp_month.status_code==200:
-            print('Success!\n')
-        else:
-            print('An error has occured:',self.resp_month)
-        title_monthly=self.soup_monthly.find_all('header')[0].text
+        stat_code(self.resp_month)
+        title_monthly=color.BOLD + self.soup_monthly.find_all('header')[0].text + color.END
         table_monthly=self.soup_monthly.find('table')
-        month_table=pd.read_html(str(table_monthly))[0].drop('Hero',1)
+        month_table=pd.read_html(str(table_monthly))[0].drop('Hero',axis=1)
         print(title_monthly.center(50))
         print(month_table.head(10),'\n')
 
     def week(self):
         """weekly winrate"""
 
-        if self.resp_week.status_code==200:
-            print('Success!\n')
-        else:
-            print('An error has occured:',self.resp_week)
-        title_weekly=self.soup_weekly.find_all('header')[0].text
+        stat_code(self.resp_week)
+        title_weekly=color.BOLD + self.soup_weekly.find_all('header')[0].text + color.END
         table2=self.soup_weekly.find('table')
-        week_table=pd.read_html(str(table2))[0].drop('Hero',1)
+        week_table=pd.read_html(str(table2))[0].drop('Hero',axis=1)
         print(title_weekly.center(50))
         print(week_table.head(10),'\n')
 
 class Heroes:
-    '''heroes class'''
+    '''heroes class scraping dotabuff for every hero'''
 
     def __init__(self):
-        hero_name=input("Search Dota 2 Heroes: ")
+        hero_name=input(color.BOLD + "Search Dota 2 Heroes: " + color.END)
         for i in range(0, len(hero_name), 1):
             if hero_name[i] == ' ':
                 hero_name=hero_name.replace(hero_name[i], '-')
@@ -63,27 +83,24 @@ class Heroes:
     def stat(self):
         '''heroes stat'''
 
-        if self.resp_stat.status_code==200:
-            print('Success!\n')
-        else:
-            print('An error has occured', self.resp_stat)
+        stat_code(self.resp_stat)
         table=self.soup_status.find_all('table')
         laning_presence=pd.read_html(str(table))[1]
         most_item_used=pd.read_html(str(table))[2]
         best_versus=pd.read_html(str(table))[3]
         worst_versus=pd.read_html(str(table))[4]
-        print("Lane Presence".center(50))
+        print(color.BOLD + "Lane Presence".center(50) + color.END)
         print(laning_presence,'\n')
-        print("Most Used Items This Week".center(50))
-        print(most_item_used.drop('Item',1),'\n')
-        print("Best Versus This Week".center(50))
-        print(best_versus.drop('Hero',1),'\n')
-        print("Worst Versus This Week".center(50))
-        print(worst_versus.drop('Hero',1), '\n')
-
+        print(color.BOLD + "Most Used Items This Week".center(50) + color.END)
+        print(most_item_used.drop('Item',axis=1),'\n')
+        print(color.BOLD + "Best Versus This Week".center(50) + color.END)
+        print(best_versus.drop('Hero',axis=1),'\n')
+        print(color.BOLD + "Worst Versus This Week".center(50) + color.END)
+        print(worst_versus.drop('Hero',axis=1), '\n')
 
 class GameImpact:
-    '''most game impact class'''
+    '''most game impact class scraping dotabuff for most game impact
+    weekly and monthly'''
 
     def __init__(self):
         self.impact_month='https://www.dotabuff.com/heroes/impact'
@@ -100,46 +117,33 @@ class GameImpact:
 
     def game_impact_month(self):
         '''game impact this month'''
-        if self.resp_impact_month.status_code==200:
-            print('Success!\n')
-        else:
-            print('An error has occured', self.resp_impact_month)
-        title_monthly=self.soup_impact_monthly.find_all('header')[0].text
+
+        stat_code(self.resp_impact_month)
+        title_monthly=color.BOLD + self.soup_impact_monthly.find_all('header')[0].text + color.END
         table_monthly=self.soup_impact_monthly.find('table')
-        month_table=pd.read_html(str(table_monthly))[0].drop('Hero',1)
+        month_table=pd.read_html(str(table_monthly))[0].drop('Hero',axis=1)
         print(title_monthly.center(50))
         print(month_table.head(10),'\n')
 
     def game_impact_week(self):
         '''game impact this week'''
-        if self.resp_impact_month.status_code==200:
-            print('Success!\n')
-        else:
-            print('An error has occured', self.resp_impact_month)
-        title_weekly=self.soup_impact_weekly.find_all('header')[0].text
+
+        stat_code(self.resp_impact_week)
+        title_weekly=color.BOLD + self.soup_impact_weekly.find_all('header')[0].text + color.END
         table_weekly=self.soup_impact_weekly.find('table')
-        month_table=pd.read_html(str(table_weekly))[0].drop('Hero',1)
+        month_table=pd.read_html(str(table_weekly))[0].drop('Hero',axis=1)
         print(title_weekly.center(50))
         print(month_table.head(10),'\n')
-
-def help_text():
-    '''display help text'''
-    print('''Usage: dota_stat.py [OPTION]\n
--wm\t\tHighest Win Rate This Month
--ww\t\tHighest Win Rate This Week
--H | --hero\tChoose Heroes And Display Laning Presence, Most Item Used, Versus And Worst Versus
--iw\t\tMost Game Impact This Week
--im\t\tMost Game Impact This Month
--h | --help\tShow This Text\n''')
 
 if __name__=='__main__':
     winrate=Winrate()
     try:
-
+        # make empty argument rum default program
         if len(sys.argv)<2:
             help_text()
             sys.exit()
 
+        # make option in program
         arg=sys.argv[1]
 
         if arg == "-wm":
@@ -161,6 +165,6 @@ if __name__=='__main__':
             help_text()
 
     except KeyboardInterrupt:
-        print("exit")
+        print(color.RED + "exit" + color.END)
     finally:
-        print("Done")
+        print(color.GREEN + "Done" + color.END)
